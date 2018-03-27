@@ -1,0 +1,78 @@
+DROP TABLE IF EXISTS`course_exam`;
+DROP TABLE IF EXISTS`enrolment`;
+DROP TABLE IF EXISTS`student`;
+DROP TABLE IF EXISTS`course`;
+DROP TABLE IF EXISTS`teacher`;
+
+CREATE TABLE `student` (
+ `id` bigint(20) NOT NULL,
+ `address` varchar(255) DEFAULT NULL,
+ `studentCode` varchar(255) DEFAULT NULL,
+ `id_number` varchar(255) DEFAULT NULL,
+ `name` varchar(255) DEFAULT NULL,
+ `surname` varchar(255) DEFAULT NULL,
+ `username` varchar(255) DEFAULT NULL,
+ `password` varchar(255) DEFAULT NULL,
+ PRIMARY KEY (`id`),
+ UNIQUE KEY `studentCode` (`studentCode`),
+ UNIQUE KEY `id_number` (`id_number`)
+);
+
+CREATE TABLE `teacher` (
+ `id` bigint(20) NOT NULL,
+ `address` varchar(255) NOT NULL,
+ `id_number` varchar(255) NOT NULL,
+ `name` varchar(255) NOT NULL,
+ `surname` varchar(255) NOT NULL,
+ `username` varchar(255) DEFAULT NULL,
+ `password` varchar(255) DEFAULT NULL,
+ PRIMARY KEY (`id`),
+ UNIQUE KEY `id_number` (`id_number`)
+);
+
+CREATE TABLE `course` (
+ `id` bigint(20) NOT NULL,
+ `course_name` varchar(255) NOT NULL,
+ `end_date` date NOT NULL,
+ `start_date` date NOT NULL,
+ `teacher_id` bigint(20) DEFAULT NULL,
+ PRIMARY KEY (`id`),
+ KEY `teacher_id` (`teacher_id`),
+ CONSTRAINT `teacher_id` FOREIGN KEY (`teacher_id` ) REFERENCES `teacher` (`id`)
+); 
+
+CREATE TABLE `course_exam` (
+ `course_id` bigint(20) NOT NULL,
+ `date` date DEFAULT NULL,
+ KEY `course_id` (`course_id`),
+ CONSTRAINT `course_id` FOREIGN KEY (`course_id`) REFERENCES `course` (`id`)
+);
+
+CREATE TABLE `enrolment` (
+ `students_id` bigint(20) NOT NULL,
+ `courses_id` bigint(20) NOT NULL,
+ `grades` bigint(20) DEFAULT NULL,
+ KEY `students_id` (`students_id`),
+ KEY `courses_id` (`courses_id`),
+ CONSTRAINT `students_id` FOREIGN KEY (`students_id`) REFERENCES `student` (`id`),
+ CONSTRAINT `courses_id` FOREIGN KEY (`courses_id`) REFERENCES `course` (`id`)
+);
+
+
+INSERT INTO `teacher`(`id`, `address`, `id_number`, `name`, `surname`, `username`, `password`) VALUES (0,'teacher1','teacher1','teacher1','teacher1','teacher1','teacher1');
+INSERT INTO `teacher`(`id`, `address`, `id_number`, `name`, `surname`, `username`, `password`) VALUES (1,'teacher2','teacher2','teacher2','teacher2','teacher2','teacher2');
+
+
+INSERT INTO `student`(`id`, `address`, `studentCode`, `id_number`, `name`, `surname`, `username`, `password`) VALUES (0,'student1','student1','student1','student1','student1','student1','student1'); 
+INSERT INTO `student`(`id`, `address`, `studentCode`, `id_number`, `name`, `surname`, `username`, `password`) VALUES (1,'student2','student2','student2','student2','student2','student2','student2');
+INSERT INTO `student`(`id`, `address`, `studentCode`, `id_number`, `name`, `surname`, `username`, `password`) VALUES (2,'student3','student3','student3','student3','student3','student3','student3');
+
+INSERT INTO `course`(`id`, `course_name`, `end_date`, `start_date`, `teacher_id`) VALUES (0,'course1','2018-02-03','2018-02-03',0);
+INSERT INTO `course`(`id`, `course_name`, `end_date`, `start_date`, `teacher_id`) VALUES (1,'course2','2018-02-04','2018-02-05',1);  
+
+INSERT INTO `course_exam`(`course_id`, `date`) VALUES (0,'2018-05-03');
+INSERT INTO `course_exam`(`course_id`, `date`) VALUES (1,'2018-05-05');
+
+INSERT INTO `enrolment`(`students_id`, `courses_id`, `grades`) VALUES (0,0,-1);
+INSERT INTO `enrolment`(`students_id`, `courses_id`, `grades`) VALUES (1,0,7);
+INSERT INTO `enrolment`(`students_id`, `courses_id`, `grades`) VALUES (1,1,3);
